@@ -34,8 +34,8 @@ qa=0.1 #catchability of A
 qb=0.1 #catchability of B
 Ea=1 #effort for A
 Eb=1 #effort for B
-harvA=c(rep(0.05, years/2), rep(0.05, years/2)) #harvest rate for A
-harvB=c(rep(0.05, years/2), rep(0.05, years/2)) #harvest rate for B
+harvA=c(rep(0.75, years/2), rep(0.75, years/2)) #harvest rate for A
+harvB=c(rep(0.75, years/2), rep(0.05, years/2)) #harvest rate for B
 
 #initializing
 start=c(30,30,30,30)
