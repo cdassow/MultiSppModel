@@ -5,60 +5,58 @@ rm(list = ls())
 setwd("C:/Users/jones/BoxSync/NDstuff/Dissertation/4/MultiSppModel/") #working directory for Colin's computer
 
 #start with a stage-structured model with 2 stages for a single species
-years=100
-A.A=numeric(years)
-A.J=numeric(years)
-B.A=numeric(years)
-B.J=numeric(years)
 
-start=c(500,3000,400,3000)
+#places to store model output
+years=500
+a.a=numeric(years)
+j.a=numeric(years)
+a.b=numeric(years)
+j.b=numeric(years)
 
-Amort=.01 #natural mortality
-Bmort=.01 #natural mortality
-Arep=.5 #reproduction
-Brep=.5 #reproduction
-Amat=.2 #maturation
-Bmat=.2 #maturation
-Apred=3 #number of juveniles of B consumbed by A adults each year
-Bpred=3 #number of juveniles of A consumbed by B adults each year
-K.aa=1000 #carrying capacity of A adults
-K.aj=5000 #carrying capacity of A juv
-K.ba=1000 #carrying capacity of B adults
-K.bj=5000 #carrying capacity of B juv
-q.a=.1 #catchability of A
-e.a=1 #effort for A
-q.b=.1 #catchability of B
-e.b=1 #effort for B
-Aharv=0.9 #proportion of the catch harvested for A
-Bharv=0.01 #proportion of the catch harvested for B
+#natural mortality of each species
+mortA=0.15
+mortB=0.15
+#maturation of each species
+matA=0.2
+matB=0.2
+#beverton-holt recruitment parameters for each species
+xa=100 #stock size at which recruitment = half the max
+xb=100 #stock size at which recruitment = half the max
+ya=100 #maximum recruits
+yb=100 #maximum recruits
+#predation parameters for each species
+ha=50 #handle time 
+hb=50 #handle time
+ea=0.1 #encounter rate for a juveniles with adults of b
+eb=0.1 #encounter rate for b juveniles with adults of a
+#harvest parameters
+qa=0.1 #catchability of A
+qb=0.1 #catchability of B
+Ea=1 #effort for A
+Eb=1 #effort for B
+harvA=c(rep(0.05, years/2), rep(0.05, years/2)) #harvest rate for A
+harvB=c(rep(0.05, years/2), rep(0.05, years/2)) #harvest rate for B
 
-A.A[1]=start[1]
-A.J[1]=start[2]
-B.A[1]=start[3]
-B.J[1]=start[4]
-for(i in 1:years){
-  A.A[i+1]=ifelse(A.A[i]+(A.J[i]*Amat-A.A[i]*Amort)*(1-(A.A[i]/K.aa))-(q.a*e.a*A.A[i]*Aharv)<0,
-                  0,
-                  A.A[i]+(A.J[i]*Amat-A.A[i]*Amort)*(1-(A.A[i]/K.aa))-(q.a*e.a*A.A[i]*Aharv))
-  A.J[i+1]=ifelse(A.J[i]+(A.A[i]*Arep-B.A[i]*Bpred)*(1-(A.J[i]/K.aj))<0,
-                  0,
-                  A.J[i]+(A.A[i]*Arep-B.A[i]*Bpred)*(1-(A.J[i]/K.aj)))
-  B.A[i+1]=ifelse(B.A[i]+(B.J[i]*Bmat-B.A[i]*Bmort)*(1-(B.A[i]/K.ba))-(q.b*e.b*B.A[i]*Bharv)<0,
-                  0,
-                  B.A[i]+(B.J[i]*Bmat-B.A[i]*Bmort)*(1-(B.A[i]/K.ba))-(q.b*e.b*B.A[i]*Bharv))
-  B.J[i+1]=ifelse(B.J[i]+(B.A[i]*Brep-A.A[i]*Apred)*(1-(B.J[i]/K.bj))<0,
-                  0,
-                  B.J[i]+(B.A[i]*Brep-A.A[i]*Apred)*(1-(B.J[i]/K.bj)))
-  
-    
+#initializing
+start=c(30,30,30,30)
+a.a[1]=start[1]
+j.a[1]=start[2]
+a.b[1]=start[3]
+j.b[1]=start[4]
+
+for(i in 1:(years-1)){
+  j.a[i+1]=j.a[i]+((ya*a.a[i])/(xa+a.a[i]))-mortA*j.a[i]-matA*j.a[i]-((ea*j.a[i]/(1+ea*ha*j.a[i]))*a.a[i])
+  j.b[i+1]=j.b[i]+((yb*a.b[i])/(xb+a.b[i]))-mortB*j.b[i]-matB*j.b[i]-((eb*j.b[i]/(1+eb*hb*j.b[i]))*a.b[i])
+  a.a[i+1]=a.a[i]+matA*j.a[i]-mortA*a.a[i]-(qa*Ea*a.a[i]*harvA[i])
+  a.b[i+1]=a.b[i]+matB*j.b[i]-mortB*a.b[i]-(qb*Eb*a.b[i]*harvB[i])
 }
-abund=data.frame(A.A, A.J, B.A, B.J) #storing the abundances of adults an juveniles at each time step
 
+abund=data.frame(j.a, j.b, a.a, a.b)
 
-#visualize output
-
-plot(1:nrow(abund), abund$A.A, type = "l", ylab = "Abundance", xlab = "Time", ylim = range(abund))
-lines(1:nrow(abund), abund$A.J, lty=2)
-lines(1:nrow(abund), abund$B.A, lty=1, col="red")
-lines(1:nrow(abund), abund$B.J, lty=2, col="red")
-legend("right", legend = c("A.adult", "A.juv", "B.adult", "B.juv"), lty = c(1,2,1,2), col = c("black", "black", "red", "red"))
+#looking at output
+plot(1:years, abund$j.a, type = "l", lty = 3, ylim = c(0,max(abund)), ylab = "abundance", xlab = "time")
+lines(1:years, abund$j.b, lty = 3, col = "red")
+lines(1:years, abund$a.a, lty = 1, col = "black")
+lines(1:years, abund$a.b, lty = 1, col = "red")
+#abline(v=years/2, col = "grey")
+legend("bottomright", legend = c("j.a", "j.b", "a.a", "a.b"), lty = c(3,3,1,1), col = c("black", "red", "black", "red"), bty = "n")
