@@ -38,7 +38,7 @@ for(i in 1:nrow(store)){
   store2$ref[i]=(0.5*1*sim[nrow(sim),3]*sim[nrow(sim),4])/(8+1+0.5*sim[nrow(sim),3])
 }
 par(mar=c(5,5,2,5))
-plot(store$qEs,store$A,lwd=3,type='l')
+plot(store$qEs,store$A,lwd=3,type='l', ylab = "Abundance", xlab = "Harvest (q*E)")
 lines(store$qEs,store$P,lwd=3,col='grey')
 lines(store2$qEs,store2$A,lwd=3,lty=3)
 lines(store2$qEs,store2$P,lwd=3,col='grey',lty=3)
@@ -165,7 +165,7 @@ lines(store2$qEs,store2$A1,lwd=4,lty=3)
 lines(store2$qEs,store2$A2,lwd=4,col='grey',lty=3)
 legend("topright",legend = c("sp 1", "sp 2"), col = c("black","grey"),lwd=2)
 
-
+#flipping location of juvenile competition and interspecific competition in the model
 simBiggs4<-function(t,y,params){
   A1<-y[1]
   A2<-y[2]
@@ -203,7 +203,7 @@ for(i in 1:nrow(store)){
   store$J1[i]=sim[nrow(sim),4]
   store$J2[i]=sim[nrow(sim),5]
 }
-plot(store$qEs,store$A1,lwd=3,type='l',ylim=c(0,max(store[,2:3])),ylab = "Abundance",xlab = "q*E")
+plot(store$qEs,store$A1,lwd=3,type='l',ylim=c(0,max(store[,2:3])),ylab = "Abundance",xlab = "Harvest (q*E)")
 lines(store$qEs,store$A2,lwd=3,col='grey')
 store2=data.frame(qEs=seq(.05,8,length.out=30),A1=0,A2=0,J1=0,J2=0)
 y0=c(200,10,40,40)
@@ -216,8 +216,8 @@ for(i in 1:nrow(store)){
   store2$J1[i]=sim[nrow(sim),4]
   store2$J2[i]=sim[nrow(sim),5]
 }
-lines(store2$qEs,store2$A1,lwd=4,lty=3)
-lines(store2$qEs,store2$A2,lwd=4,col='grey',lty=3)
+lines(store2$qEs,store2$A1,lwd=3,lty=3)
+lines(store2$qEs,store2$A2,lwd=3,col='grey',lty=3)
 legend("topright",legend = c("sp 1", "sp 2"), col = c("black","grey"),lwd=2)
 
 #taking cannibalism out of the model
