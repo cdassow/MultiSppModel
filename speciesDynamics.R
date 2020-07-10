@@ -41,8 +41,8 @@ lines(sim[,1],sim[,5],lty=2,col="blue")
 store=data.frame(qEs=seq(.05,5,length.out=30),A1=0,A2=0,J1=0,J2=0)
 y0=c(10,200,40,40)
 for(i in 1:nrow(store)){
-  p=c(c(qE1=store$qEs[i],s1=0.5,cJ1A1=0.003,cJ1A2=0.003,cJ1J2=0.001,v1=1,h1=6,f1=1),
-      c(qE2=1.8,s2=0.5,cJ2A2=0.003,cJ2A1=0.003,cJ2J1=0.001,v2=1,h2=6,f2=1))
+  p=c(c(qE1=store$qEs[i],s1=0.5,cJ1A1=0.007,cJ1A2=0.003,cJ1J2=0.001,v1=1,h1=6,f1=1),
+      c(qE2=1.8,s2=0.5,cJ2A2=0.007,cJ2A1=0.003,cJ2J1=0.001,v2=1,h2=6,f2=1))
   sim=ode(y=y0,times=times,func=simBiggs,parms=p)
   store$A1[i]=sim[nrow(sim),2]
   store$A2[i]=sim[nrow(sim),3]
@@ -52,8 +52,8 @@ for(i in 1:nrow(store)){
 store2=data.frame(qEs=seq(.05,5,length.out=30),A1=0,A2=0,J1=0,J2=0)
 y0=c(200,10,40,40)
 for(i in 1:nrow(store)){
-  p=c(c(qE1=store2$qEs[i],s1=0.5,cJ1A1=0.003,cJ1A2=0.003,cJ1J2=0.001,v1=1,h1=6,f1=1),
-      c(qE2=1.8,s2=0.5,cJ2A2=0.003,cJ2A1=0.003,cJ2J1=0.001,v2=1,h2=6,f2=1))
+  p=c(c(qE1=store2$qEs[i],s1=0.5,cJ1A1=0.007,cJ1A2=0.003,cJ1J2=0.001,v1=1,h1=6,f1=1),
+      c(qE2=1.8,s2=0.5,cJ2A2=0.007,cJ2A1=0.003,cJ2J1=0.001,v2=1,h2=6,f2=1))
   sim=ode(y=y0,times=times,func=simBiggs,parms=p)
   store2$A1[i]=sim[nrow(sim),2]
   store2$A2[i]=sim[nrow(sim),3]
